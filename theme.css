@@ -1,0 +1,112 @@
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  HARNESS DEMO SITE — THEME CONFIGURATION             ║
+  ║  Edit this file to rebrand for a specific customer.  ║
+  ║  All other files read from these variables.          ║
+  ╚══════════════════════════════════════════════════════╝
+
+  TO REBRAND: Tell Claude:
+  "Rebrand the demo for [Company]. Primary colour #XXXX,
+   accent #XXXX, font [Name], company name [Name]"
+*/
+
+:root {
+  /* ── Company Identity ─────────────────────────────── */
+  --company-name:    "Leapwork";
+  --company-domain:  "leapwork.com";
+  --company-tagline: "No-Code Test Automation";
+
+  /* ── Colour Palette ───────────────────────────────── */
+  --color-primary:       #1CC47E;   /* Leapwork green    */
+  --color-primary-dark:  #159E65;   /* Hover / pressed   */
+  --color-primary-light: #E4F9F0;   /* Tints / highlights */
+  --color-accent:        #6366F1;   /* Indigo accent     */
+  --color-accent-light:  #EEEEFF;
+
+  /* Status colours */
+  --color-success:       #22C55E;
+  --color-warning:       #F59E0B;
+  --color-danger:        #EF4444;
+  --color-info:          #3B82F6;
+
+  /* Neutrals */
+  --color-bg:            #080D12;   /* Deep tech dark    */
+  --color-bg-surface:    #0F1720;   /* Panel bg          */
+  --color-bg-elevated:   #18232E;   /* Elevated surface  */
+  --color-border:        #1E2D3D;   /* Default borders   */
+  --color-border-light:  #273D52;   /* Lighter borders   */
+  --color-text:          #EEF2F6;   /* Primary text      */
+  --color-text-muted:    #7A90A8;   /* Secondary text    */
+  --color-text-faint:    #3A5060;   /* Placeholder etc.  */
+
+  /* ── Typography ──────────────────────────────────── */
+  --font-display: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Font weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold:   700;
+
+  /* ── Spacing & Shape ─────────────────────────────── */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+
+  /* ── Shadows ─────────────────────────────────────── */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 40px rgba(28, 196, 126, 0.15);
+
+  /* ── Logo Path ───────────────────────────────────── */
+  /* Replace with customer logo URL or SVG path        */
+  --logo-url: "assets/logo.svg";
+}
+
+/*
+  ── QUICK REBRAND PRESETS ────────────────────────────
+  Uncomment a block below OR tell Claude to apply one.
+
+  Example: "Apply the banking preset"
+*/
+
+/* BANKING / FINANCE PRESET
+:root {
+  --color-primary:       #0057B8;
+  --color-primary-dark:  #003F8A;
+  --color-primary-light: #E8F0FB;
+  --color-accent:        #B8860B;
+  --color-accent-light:  #FDF6E3;
+  --color-bg:            #0D1117;
+  --color-bg-surface:    #161B26;
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'Source Sans 3', sans-serif;
+}
+*/
+
+/* HEALTHCARE PRESET
+:root {
+  --color-primary:       #10B981;
+  --color-primary-dark:  #059669;
+  --color-primary-light: #D1FAE5;
+  --color-accent:        #6366F1;
+  --color-accent-light:  #EEF2FF;
+  --color-bg:            #0A1628;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+}
+*/
+
+/* RETAIL / E-COMMERCE PRESET
+:root {
+  --color-primary:       #FF6B35;
+  --color-primary-dark:  #E85520;
+  --color-primary-light: #FFF0EB;
+  --color-accent:        #1A1A2E;
+  --font-display: 'Nunito', sans-serif;
+  --font-body:    'Nunito', sans-serif;
+}
+*/
