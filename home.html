@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="base.css">
+  <script defer src="brand.js"></script>
+  <script defer src="rebrand-panel.js"></script>
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Nav ──────────────────────────────────────────── */
+    .app-nav {
+      height: 64px; padding: 0 2rem;
+      background: var(--color-bg-surface);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center; gap: 1rem;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; margin-right: auto;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--color-primary);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
+    .nav-brand-name {
+      font-family: var(--font-display);
+      font-weight: var(--weight-bold);
+      font-size: 1rem; color: var(--color-text);
+    }
+    .nav-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: var(--weight-bold); color: #fff;
+    }
+
+    /* ── Hero ─────────────────────────────────────────── */
+    .hero {
+      padding: 5rem 2rem 3.5rem;
+      text-align: center; position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 320px;
+      background: radial-gradient(ellipse, var(--color-primary) 0%, transparent 70%);
+      opacity: 0.06; pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.78rem; font-weight: var(--weight-medium);
+      color: var(--color-primary);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 0.75rem; }
+    .hero-sub { font-size: 1rem; color: var(--color-text-muted); max-width: 420px; margin: 0 auto; }
+
+    /* ── Cards ────────────────────────────────────────── */
+    .cards-section {
+      padding: 0 2rem 5rem;
+      max-width: 960px; margin: 0 auto; width: 100%;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem; cursor: pointer;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+    .feature-card::after {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: var(--color-primary);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.2s;
+    }
+    .feature-card:hover::after { transform: scaleX(1); }
+    .card-icon {
+      width: 44px; height: 44px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .card-icon svg { width: 22px; height: 22px; stroke: var(--color-primary); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .card-title {
+      font-size: 1rem; font-weight: var(--weight-bold);
+      color: var(--color-text); margin-bottom: 0.4rem;
+      font-family: var(--font-display);
+    }
+    .card-desc { font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.55; }
+    .card-cta {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.82rem; font-weight: var(--weight-medium);
+      color: var(--color-primary); margin-top: 1.25rem;
+    }
+
+    /* ── Modal base ───────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      z-index: 9997; display: none;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-xl);
+      width: 520px; max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 64px); overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalUp 0.2s ease;
+    }
+    @keyframes modalUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+    .modal-header {
+      padding: 1.5rem 1.75rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0;
+      background: var(--color-bg-surface);
+    }
+    .modal-header h2 { font-size: 1.05rem; font-weight: var(--weight-bold); }
+    .modal-close {
+      background: none; border: none; color: var(--color-text-muted);
+      cursor: pointer; font-size: 1.3rem; line-height: 1; padding: 0 4px;
+    }
+    .modal-close:hover { color: var(--color-text); }
+    .modal-body { padding: 1.5rem 1.75rem; }
+
+    /* ── Modal: Quick Start ───────────────────────────── */
+    .checklist { display: flex; flex-direction: column; gap: 0.6rem; }
+    .checklist-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .checklist-item:hover { border-color: var(--color-border-light); background: var(--color-bg-elevated); }
+    .checklist-item.done { opacity: 0.6; }
+    .check-ring {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid var(--color-border-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: transparent; transition: all 0.15s;
+    }
+    .checklist-item.done .check-ring { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .check-label { font-size: 0.875rem; color: var(--color-text); font-weight: var(--weight-medium); }
+    .check-sub { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 1px; }
+
+    /* ── Modal: Metrics ───────────────────────────────── */
+    .metrics-2up { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-bottom: 1.5rem; }
+    .m-tile {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.1rem;
+    }
+    .m-label { font-size: 0.72rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    .m-value { font-size: 1.6rem; font-weight: 700; font-family: var(--font-display); color: var(--color-text); line-height: 1; margin-bottom: 0.25rem; }
+    .m-delta { font-size: 0.75rem; color: var(--color-success); }
+    .chart-label { font-size: 0.72rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; }
+    .bar-fill { width: 100%; background: var(--color-primary); border-radius: 3px 3px 0 0; opacity: 0.75; transition: opacity 0.15s; }
+    .bar-fill:hover { opacity: 1; }
+    .bar-day { font-size: 0.68rem; color: var(--color-text-faint); }
+
+    /* ── Modal: Connect ───────────────────────────────── */
+    .int-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    .int-tile {
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 0.75rem;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      cursor: pointer; transition: all 0.15s; text-align: center;
+    }
+    .int-tile:hover { border-color: var(--color-primary); background: var(--color-bg-elevated); }
+    .int-tile.connected { border-color: var(--color-success); }
+    .int-emoji { font-size: 1.4rem; line-height: 1; }
+    .int-name { font-size: 0.8rem; font-weight: 600; color: var(--color-text); }
+    .int-state { font-size: 0.7rem; color: var(--color-text-faint); }
+    .int-tile.connected .int-state { color: var(--color-success); }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="app-nav">
+    <a class="nav-brand" href="#">
+      <div class="nav-logo-icon sidebar-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="nav-brand-name sidebar-logo-name">Company</span>
+    </a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Sign out</a>
+    <div class="nav-avatar">JD</div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">Welcome back, Jane</div>
+    <h1>What would you like to explore?</h1>
+    <p class="hero-sub" id="hero-tagline"></p>
+  </section>
+
+  <!-- Cards -->
+  <div class="cards-section">
+    <div class="cards-grid">
+
+      <div class="feature-card" onclick="openModal('quickstart')">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="card-title">Quick Start</div>
+        <div class="card-desc">Follow a guided setup to get your account fully configured and ready to go.</div>
+        <div class="card-cta">Get started <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="feature-card" onclick="openModal('metrics')">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="card-title">Highlights</div>
+        <div class="card-desc">A snapshot of your key metrics and performance over the past seven days.</div>
+        <div class="card-cta">View metrics <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <div class="feature-card" onclick="openModal('connect')">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="card-title">Connect</div>
+        <div class="card-desc">Integrate with the tools your team already uses. One click to connect.</div>
+        <div class="card-cta">Browse integrations <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Quick Start -->
+  <div id="modal-quickstart" class="modal-overlay" onclick="overlayClick(event,'quickstart')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Quick Start</h2>
+        <button class="modal-close" onclick="closeModal('quickstart')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="checklist">
+          <div class="checklist-item done" onclick="toggleCheck(this)">
+            <div class="check-ring">✓</div>
+            <div><div class="check-label">Create your account</div><div class="check-sub">Your profile is set up and ready.</div></div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-ring">✓</div>
+            <div><div class="check-label">Configure your workspace</div><div class="check-sub">Set your team preferences and defaults.</div></div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-ring">✓</div>
+            <div><div class="check-label">Connect an integration</div><div class="check-sub">Link the tools your team already uses.</div></div>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-ring">✓</div>
+            <div><div class="check-label">Invite your team</div><div class="check-sub">Bring your colleagues on board.</div></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:1.25rem">Continue Setup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Metrics -->
+  <div id="modal-metrics" class="modal-overlay" onclick="overlayClick(event,'metrics')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Highlights</h2>
+        <button class="modal-close" onclick="closeModal('metrics')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="metrics-2up">
+          <div class="m-tile"><div class="m-label">Active Users</div><div class="m-value">2,847</div><div class="m-delta">↑ 14% this week</div></div>
+          <div class="m-tile"><div class="m-label">Uptime</div><div class="m-value">99.98%</div><div class="m-delta">↑ 0.02% vs last week</div></div>
+          <div class="m-tile"><div class="m-label">Avg. Response</div><div class="m-value">84ms</div><div class="m-delta">↓ 12ms faster</div></div>
+          <div class="m-tile"><div class="m-label">Events Today</div><div class="m-value">18.4k</div><div class="m-delta">↑ 7% vs yesterday</div></div>
+        </div>
+        <div class="chart-label">Weekly Activity</div>
+        <div class="bar-chart">
+          <div class="bar-col"><div class="bar-fill" style="height:45%"></div><span class="bar-day">Mon</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:63%"></div><span class="bar-day">Tue</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:55%"></div><span class="bar-day">Wed</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:80%"></div><span class="bar-day">Thu</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:92%"></div><span class="bar-day">Fri</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:38%"></div><span class="bar-day">Sat</span></div>
+          <div class="bar-col"><div class="bar-fill" style="height:22%"></div><span class="bar-day">Sun</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Connect -->
+  <div id="modal-connect" class="modal-overlay" onclick="overlayClick(event,'connect')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Connect</h2>
+        <button class="modal-close" onclick="closeModal('connect')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1.25rem;font-size:0.875rem">Connect your existing tools with one click.</p>
+        <div class="int-grid" id="int-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Hero tagline — driven by saved industry, falls back to CSS var
+    (function () {
+      const TAGLINES = {
+        technology:  'Ready to build something great today?',
+        finance:     'Your numbers are looking sharp.',
+        healthcare:  'Good to have you back.',
+        retail:      'Plenty to explore — let\'s get started.',
+        automotive:  'Everything\'s running smoothly.',
+      };
+      const el = document.getElementById('hero-tagline');
+      if (!el) return;
+      const saved = JSON.parse(localStorage.getItem('harness-demo-brand') || 'null');
+      if (saved && TAGLINES[saved.industry]) {
+        el.textContent = TAGLINES[saved.industry];
+      } else {
+        const cssTagline = getComputedStyle(document.documentElement)
+          .getPropertyValue('--company-tagline').trim().replace(/^['"]|['"]$/g, '');
+        if (cssTagline) el.textContent = cssTagline;
+      }
+    })();
+
+    // Integrations state
+    const INTEGRATIONS = [
+      { name: 'Slack',      emoji: '💬', connected: true  },
+      { name: 'GitHub',     emoji: '🐙', connected: true  },
+      { name: 'Jira',       emoji: '📋', connected: false },
+      { name: 'Salesforce', emoji: '☁️', connected: false },
+      { name: 'Google',     emoji: '🔍', connected: false },
+      { name: 'Datadog',    emoji: '📊', connected: false },
+    ];
+
+    function renderIntegrations() {
+      document.getElementById('int-grid').innerHTML = INTEGRATIONS.map((t, i) => `
+        <div class="int-tile ${t.connected ? 'connected' : ''}" onclick="toggleInt(${i})">
+          <div class="int-emoji">${t.emoji}</div>
+          <div class="int-name">${t.name}</div>
+          <div class="int-state">${t.connected ? '✓ Connected' : 'Connect'}</div>
+        </div>`).join('');
+    }
+
+    function toggleInt(i) {
+      INTEGRATIONS[i].connected = !INTEGRATIONS[i].connected;
+      renderIntegrations();
+    }
+
+    function openModal(id) {
+      document.getElementById('modal-' + id).classList.add('open');
+      if (id === 'connect') renderIntegrations();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById('modal-' + id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function overlayClick(e, id) {
+      if (e.target === e.currentTarget) closeModal(id);
+    }
+
+    function toggleCheck(el) {
+      el.classList.toggle('done');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        ['quickstart','metrics','connect'].forEach(closeModal);
+      }
+    });
+  </script>
+</body>
+</html>

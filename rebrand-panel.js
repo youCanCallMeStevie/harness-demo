@@ -1,6 +1,14 @@
 (function () {
   const STORAGE_KEY = 'harness-demo-brand';
 
+  const TAGLINES = {
+    technology:  'Ready to build something great today?',
+    finance:     'Your numbers are looking sharp.',
+    healthcare:  'Good to have you back.',
+    retail:      'Plenty to explore — let\'s get started.',
+    automotive:  'Everything\'s running smoothly.',
+  };
+
   const PRESETS = {
     technology: {
       primary: '#1CC47E', primaryDark: '#159E65', primaryLight: '#E4F9F0',
@@ -107,6 +115,10 @@
   function applyBrand(data) {
     if (PRESETS[data.industry]) applyVars(PRESETS[data.industry]);
     applyLogo(data.name, data.domain);
+    const taglineEl = document.getElementById('hero-tagline');
+    if (taglineEl && TAGLINES[data.industry]) {
+      taglineEl.textContent = TAGLINES[data.industry];
+    }
   }
 
   // Apply saved brand immediately on load
